@@ -9,37 +9,37 @@ const categories = [
     title: "FLOWER BOUQUETS",
     description: "Custom-designed bouquets featuring fresh seasonal flowers for any occasion.",
     image: "/images/IMG_8492.jpg",
-    link: "/order"
+    link: "/category/flower-bouquets"
   },
   {
     title: "VASE ARRANGEMENTS",
     description: "Elegant vase arrangements perfect for home decor or special events.",
     image: "/images/IMG_8496.jpg",
-    link: "/order"
+    link: "/category/vase-arrangements"
   },
   {
     title: "FLOWERS FOR EVENTS",
     description: "Stunning floral designs for weddings, corporate events, and special occasions.",
     image: "/images/IMG_8494.jpg",
-    link: "/book"
+    link: "/category/flowers-for-events"
   },
   {
     title: "FLORAL SUBSCRIPTION",
     description: "Regular flower deliveries to brighten your home or office.",
     image: "/images/IMG_8495.jpg",
-    link: "/subscription"
+    link: "/category/floral-subscription"
   },
   {
     title: "BOX ARRANGEMENTS",
     description: "Beautiful blooms artfully arranged in luxury gift boxes.",
     image: "/images/IMG_8493.jpg",
-    link: "/order"
+    link: "/category/box-arrangements"
   },
   {
     title: "BRIDAL BOUQUETS",
     description: "Exquisite bridal bouquets and wedding flower arrangements.",
     image: "/images/IMG_8497.jpg",
-    link: "/book"
+    link: "/category/bridal-bouquets"
   }
 ];
 
