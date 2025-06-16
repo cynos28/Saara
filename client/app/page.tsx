@@ -1,10 +1,12 @@
-import Image from "next/image";
+import React from "react";
 import HeroSection from "./component/HeroSection";
 
 export default function Home() {
   return (
-    <div >
-       <HeroSection/>
+    <div>
+      <HeroSection />
+   
     </div>
   );
 }
+

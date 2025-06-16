@@ -61,17 +61,84 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-[#e6e2e0] shadow-md text-gray-800 py-4 sticky top-0 z-50">
+    <header className="bg-[#e6e2e0] shadow-md text-gray-800 py-2 sticky top-0 z-50">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
-          {/* Logo and Brand */}
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-16 relative">
-              {/* Replace '/logo.svg' with your logo path */}
-              <Image src="/logo.svg" alt="Logo" layout="fill" objectFit="contain" />
+        <div className="flex items-center justify-between h-16">
+          {/* Logo Section - Adjusted size */}
+          <Link href="/" className="flex items-center">
+            <div className="w-24 h-14 relative">
+              <Image
+                src="/logo.png"
+                alt="Logo"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
-            <div className="flex flex-col leading-tight">
+          </Link>
+
+          {/* Desktop Navigation - Right aligned */}
+          <div className="hidden lg:flex items-center justify-end flex-1">
+            <nav className="mr-8">
+              <ul className="flex items-center space-x-12">
+                <li>
+                  <Link href="/" className="hover:text-[#8B7355] transition-colors duration-300">
+                    HOME
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/services" className="hover:text-[#8B7355] transition-colors duration-300">
+                    SERVICES
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/about" className="hover:text-[#8B7355] transition-colors duration-300">
+                    ABOUT
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/category" className="hover:text-[#8B7355] transition-colors duration-300">
+                    FLORAL CATEGORIES
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+
+            {/* User/Auth and Icons Section */}
+            <div className="flex items-center space-x-6">
+              {isLoggedIn ? (
+                <div 
+                  onClick={handleProfileClick}
+                  className="w-10 h-10 rounded-full overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+                >
+                  {userImage ? (
+                    <Image
+                      src={userImage}
+                      alt="Profile"
+                      width={40}
+                      height={40}
+                      className="object-cover"
+                    />
+                  ) : (
+                    <FaUserCircle className="w-full h-full text-[#8B7355]" />
+                  )}
+                </div>
+              ) : (
+                <button 
+                  onClick={() => setShowSignIn(true)}
+                  className="px-4 py-2 bg-[#8B7355] text-white rounded-full hover:bg-[#6F5B3E] transition-colors duration-300"
+                >
+                  SIGN IN
+                </button>
+              )}
               
+              {/* Icons */}
+              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8]">
+                <FaShoppingCart className="text-[#8B7355] text-xl" />
+              </button>
+              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8]">
+                <FaBell className="text-[#8B7355] text-xl" />
+              </button>
             </div>
           </div>
 
@@ -81,82 +148,19 @@ export default function Header() {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? (
-              <HiX className="h-6 w-6 text-[#FFAAAA]" />
+              <HiX className="h-6 w-6 text-[#8B7355]" />
             ) : (
-              <HiMenu className="h-6 w-6 text-[#FFAAAA]" />
+              <HiMenu className="h-6 w-6 text-[#8B7355]" />
             )}
           </button>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:block ml-auto mr-8">
-            <ul className="flex space-x-12 text-base font-medium">
-              <li>
-                <Link href="/" className="hover:text-[#8B7355] transition-colors duration-300">
-                  HOME
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-[#8B7355] transition-colors duration-300">
-                  SERVICES
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-[#8B7355] transition-colors duration-300">
-                  ABOUT
-                </Link>
-              </li>
-              <li>
-                <Link href="/categories" className="hover:text-[#8B7355] transition-colors duration-300">
-                  FLORAL CATEGORIES
-                </Link>
-              </li>
-              <li>
-                {isLoggedIn ? (
-                  <div className="relative">
-                    <div 
-                      onClick={handleProfileClick}
-                      className="w-10 h-10 rounded-full overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
-                    >
-                      {userImage ? (
-                        <Image
-                          src={userImage}
-                          alt="Profile"
-                          width={40}
-                          height={40}
-                          className="object-cover"
-                        />
-                      ) : (
-                        <FaUserCircle className="w-full h-full text-[#8B7355]" />
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <button 
-                    onClick={() => setShowSignIn(true)}
-                    className="px-4 py-2 bg-[#8B7355] text-white rounded-full hover:bg-[#6F5B3E] transition-colors duration-300 cursor=pointer"
-                  >
-                    SIGN IN
-                  </button>
-                )}
-              </li>
-            </ul>
-          </nav>
-
-          {/* Desktop Icons */}
-          <div className="hidden lg:flex items-center space-x-4">
-            <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8] transition-colors duration-300">
-              <FaShoppingCart className="text-[#8B7355] text-xl" cursor="pointer" />
-            </button>
-            <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8] transition-colors duration-300">
-              <FaBell className="text-[#8B7355] text-xl" cursor="pointer" />
-            </button>
-          </div>
         </div>
 
-        {/* Mobile Navigation */}
-        <div className={`lg:hidden ${isMenuOpen ? 'block' : 'hidden'} mt-4 pb-4`}>
-          <nav>
-            <ul className="flex flex-col space-y-4 text-base font-medium">
+        {/* Mobile Navigation Menu - Improved styling */}
+        <div 
+          className={`lg:hidden ${isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'} overflow-hidden transition-all duration-300`}
+        >
+          <nav className="mt-4 pt-4 border-t border-gray-200">
+            <ul className="flex flex-col space-y-6 pb-6">
               <li>
                 <Link 
                   href="/" 
@@ -186,7 +190,7 @@ export default function Header() {
               </li>
               <li>
                 <Link 
-                  href="/categories" 
+                  href="/category" 
                   className="block hover:text-[#8B7355] transition-colors duration-300"
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -213,38 +217,40 @@ export default function Header() {
                 </li>
               )}
             </ul>
+            
+            {/* Mobile Icons */}
+            <div className="flex justify-center space-x-6 mt-6 pb-4 border-t border-gray-200 pt-6">
+              <button className="w-12 h-12 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8] transition-colors duration-300">
+                <FaShoppingCart className="text-[#8B7355] text-2xl" />
+              </button>
+              <button className="w-12 h-12 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8] transition-colors duration-300">
+                <FaBell className="text-[#8B7355] text-2xl" />
+              </button>
+            </div>
           </nav>
-          {/* Mobile Icons */}
-          <div className="flex items-center space-x-4 mt-4">
-            <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8] transition-colors duration-300">
-              <FaShoppingCart className="text-[#8B7355] text-xl" />
-            </button>
-            <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8] transition-colors duration-300">
-              <FaBell className="text-[#8B7355] text-xl" />
-            </button>
-          </div>
         </div>
-      </div>
 
-      {/* Add Sign In/Up Modals */}
-      {showSignIn && (
-        <SignIn 
-          onClose={() => setShowSignIn(false)} 
-          onSwitchToSignUp={() => {
-            setShowSignIn(false);
-            setShowSignUp(true);
-          }}
-        />
-      )}
-      {showSignUp && (
-        <SignUp 
-          onClose={() => setShowSignUp(false)}
-          onSwitchToSignIn={() => {
-            setShowSignUp(false);
-            setShowSignIn(true);
-          }}  
-        />
-      )}
+        {/* Sign In/Up Modals */}
+        {showSignIn && (
+          <SignIn 
+            onClose={() => setShowSignIn(false)} 
+            onSwitchToSignUp={() => {
+              setShowSignIn(false);
+              setShowSignUp(true);
+            }}
+          />
+        )}
+        {showSignUp && (
+          <SignUp 
+            onClose={() => setShowSignUp(false)}
+            onSwitchToSignIn={() => {
+              setShowSignUp(false);
+              setShowSignIn(true);
+            }}  
+          />
+        )}
+      </div>
     </header>
   );
 }
+   

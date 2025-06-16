@@ -17,27 +17,33 @@ export default function HeroSection() {
               {/* Button layout */}
               <div className="flex flex-col items-center lg:items-start w-full space-y-4">
                 {/* Top row: two buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start w-full">
                   <Link 
-                    href="/order"
-                    className="w-56 py-3 text-center bg-black text-white hover:bg-gray-800 transition-colors duration-300 rounded text-sm font-medium"
+                    href="/category"
+                    className="w-56 py-3 text-center bg-[#8B7355] text-white hover:bg-[#6F5B3E] transition-colors duration-300 rounded text-sm font-medium"
                   >
                     ORDER FLOWERS
                   </Link>
                   <Link 
-                    href="/book"
-                    className="w-56 py-3 text-center bg-black text-white hover:bg-gray-800 transition-colors duration-300 rounded text-sm font-medium"
+                    href="/book-event"
+                    className="w-56 py-3 text-center bg-[#8B7355] text-white hover:bg-[#6F5B3E] transition-colors duration-300 rounded text-sm font-medium"
                   >
                     BOOK AN EVENT
                   </Link>
                 </div>
-                {/* Bottom row: one button centered */}
-                <div className="flex justify-center lg:justify-start lg:ml-28">
+                {/* Bottom row: two buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start w-full">
                   <Link 
-                    href="/create"
-                    className="w-60 py-3 px-2 text-center bg-black text-white hover:bg-gray-800 transition-colors duration-300 rounded text-sm font-medium"
+                    href="/create-bouquet"
+                    className="w-56 py-3 text-center bg-[#8B7355] text-white hover:bg-[#6F5B3E] transition-colors duration-300 rounded text-sm font-medium"
                   >
                     CREATE YOUR OWN BOUQUET
+                  </Link>
+                  <Link 
+                    href="/budget-calculator"
+                    className="w-56 py-3 text-center bg-[#BE5B50] text-white hover:bg-[#A64B41] transition-colors duration-300 rounded text-sm font-medium"
+                  >
+                    BUDGET CALCULATOR
                   </Link>
                 </div>
               </div>
