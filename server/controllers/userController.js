@@ -34,15 +34,26 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
+
+    // Create admin user if it doesn't exist
+    if (email === 'admin@gmail.com' && password === 'admin' && !user) {
+      user = await User.create({
+        name: 'Admin',
+        email: 'admin@gmail.com',
+        password: 'admin',
+        address: 'Admin Office',
+        gender: 'Not Specified',
+        isAdmin: true
+      });
+    }
 
     if (user && (await user.matchPassword(password))) {
       res.json({
         _id: user._id,
         name: user.name,
         email: user.email,
-        address: user.address,
-        gender: user.gender,
+        isAdmin: user.isAdmin,
         token: generateToken(user._id)
       });
     } else {
@@ -115,3 +126,4 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+ 

@@ -29,10 +29,15 @@ export default function SignIn({ onClose, onSwitchToSignUp }: SignInProps) {
 
       if (response.ok) {
         localStorage.setItem('userToken', data.token);
-        // Add this to trigger a page reload to update header state
-        window.location.reload();
+        localStorage.setItem('isAdmin', data.isAdmin);
         onClose();
-        router.push('/profile');
+
+        if (data.isAdmin) {
+          window.location.href = '/admin'; // Force page reload and navigation
+        } else {
+          router.push('/profile');
+          window.location.reload();
+        }
       } else {
         alert(data.message || 'Login failed');
       }
@@ -98,3 +103,4 @@ export default function SignIn({ onClose, onSwitchToSignUp }: SignInProps) {
     </div>
   );
 }
+

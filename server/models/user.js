@@ -12,7 +12,11 @@ const userSchema = new mongoose.Schema({
     default: '',
     maxLength: 5 * 1024 * 1024 // Limit to 5MB
   },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  isAdmin: {
+    type: Boolean,
+    default: false
+  }
 });
 
 // Hash password before saving
