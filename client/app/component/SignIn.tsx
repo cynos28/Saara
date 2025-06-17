@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useAuthentication } from '../../hooks/useAuthentication';
 
 interface SignInProps {
   onClose: () => void;
@@ -8,7 +8,7 @@ interface SignInProps {
 }
 
 export default function SignIn({ onClose, onSwitchToSignUp }: SignInProps) {
-  const router = useRouter();
+  const { handleLogin, loading, error } = useAuthentication();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -16,34 +16,10 @@ export default function SignIn({ onClose, onSwitchToSignUp }: SignInProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:3001/api/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem('userToken', data.token);
-        localStorage.setItem('isAdmin', data.isAdmin);
-        onClose();
-
-        if (data.isAdmin) {
-          window.location.href = '/admin'; // Force page reload and navigation
-        } else {
-          router.push('/profile');
-          window.location.reload();
-        }
-      } else {
-        alert(data.message || 'Login failed');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('Login failed. Please try again.');
+    const success = await handleLogin(formData);
+    if (success) {
+      onClose();
+      // Page will be redirected by the hook
     }
   };
 
@@ -103,4 +79,4 @@ export default function SignIn({ onClose, onSwitchToSignUp }: SignInProps) {
     </div>
   );
 }
-
+         

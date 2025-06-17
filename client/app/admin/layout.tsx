@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { 
   LayoutDashboard, 
   Flower, 
@@ -16,7 +16,8 @@ import {
   X,
   CreditCard,
   Globe,
-  UserCheck
+  UserCheck,
+  LogOut,
 } from 'lucide-react';
 
 const navigation = [
@@ -40,6 +41,13 @@ export default function AdminLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('isAdmin');
+    router.push('/');
+  };
 
   return (
     <div className="min-h-screen bg-[#F5F0EB]">
@@ -109,31 +117,19 @@ export default function AdminLayout({
                 </Link>
               );
             })}
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            >
+              <LogOut className="h-5 w-5 mr-3" />
+              Logout
+            </button>
           </nav>
         </div>
       </div>
 
-      {/* Main content */}
+      {/* Main content - removed header */}
       <div className="lg:pl-64">
-        {/* Top navigation */}
-        <div className="flex items-center justify-between h-16 px-4 bg-white border-b border-gray-200 shadow-sm lg:px-6">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 lg:hidden"
-          >
-            <Menu className="h-6 w-6" />
-          </button>
-          
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-[#8B7355] rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">A</span>
-              </div>
-              <span className="hidden sm:block text-sm font-medium text-gray-700">Admin User</span>
-            </div>
-          </div>
-        </div>
-
         {/* Page content */}
         <main className="flex-1 p-4 lg:p-6">
           {children}
