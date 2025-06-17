@@ -2,16 +2,19 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useCart } from '@/context/CartContext';
 
 const flowers = [
-  { name: "Roses", price: "PER STEM - 10 AED", image: "/images/IMG_85462.jpg" },
-  { name: "Peonies", price: "PER STEM - 40 AED", image: "/images/IMG_8545.jpg" },
-  { name: "Hydreangeas", price: "PER STEM - 35 AED", image: "/images/IMG_8542.jpg" },
-  { name: "Alstromerias", price: "PER STEM - 8 AED", image: "/images/IMG_8546.jpg" },
-  { name: "Spray Roses", price: "PER STEM - 15 AED", image: "/images/IMG_8544.jpg" },
+  { id: "everyday-1", name: "Roses", price: "PER STEM - 10 AED", image: "/images/IMG_85462.jpg" },
+  { id: "everyday-2", name: "Peonies", price: "PER STEM - 40 AED", image: "/images/IMG_8545.jpg" },
+  { id: "everyday-3", name: "Hydreangeas", price: "PER STEM - 35 AED", image: "/images/IMG_8542.jpg" },
+  { id: "everyday-4", name: "Alstromerias", price: "PER STEM - 8 AED", image: "/images/IMG_8546.jpg" },
+  { id: "everyday-5", name: "Spray Roses", price: "PER STEM - 15 AED", image: "/images/IMG_8544.jpg" },
 ];
 
 export default function EverydayFlowersPage() {
+  const { addToCart } = useCart();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f8f5f3] to-[#e6e2e0]">
       <motion.div 
@@ -30,7 +33,7 @@ export default function EverydayFlowersPage() {
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8">
           {flowers.map((flower, index) => (
             <motion.div
-              key={index}
+              key={flower.id}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: "50px" }}
@@ -57,9 +60,11 @@ export default function EverydayFlowersPage() {
                     <p className="text-[#8B7355] font-semibold text-lg mb-4">
                       {flower.price}
                     </p>
-                    <button className="w-full bg-[#8B7355] text-white py-4 rounded-lg
-                      hover:bg-[#6F5B3E] transition-colors duration-300 text-sm uppercase tracking-wider
-                      flex items-center justify-center gap-3"
+                    <button 
+                      onClick={() => addToCart(flower)}
+                      className="w-full bg-[#8B7355] text-white py-4 rounded-lg
+                        hover:bg-[#6F5B3E] transition-colors duration-300 text-sm uppercase tracking-wider
+                        flex items-center justify-center gap-3"
                     >
                       Add to Cart
                       <svg 
@@ -68,8 +73,7 @@ export default function EverydayFlowersPage() {
                         viewBox="0 0 20 20" 
                         fill="currentColor"
                       >
-                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                        <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
                       </svg>
                     </button>
                   </div>

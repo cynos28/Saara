@@ -8,6 +8,8 @@ import { useState, useEffect } from "react";
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import { useRouter } from 'next/navigation';
+import { useCart } from '@/context/CartContext';
+import CartModal from './CartModal';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,6 +17,8 @@ export default function Header() {
   const [showSignUp, setShowSignUp] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userImage, setUserImage] = useState('');
+  const [showCart, setShowCart] = useState(false);
+  const { totalItems } = useCart();
   const router = useRouter();
 
   useEffect(() => {
@@ -133,8 +137,16 @@ export default function Header() {
               )}
               
               {/* Icons */}
-              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8]">
+              <button 
+                onClick={() => setShowCart(true)}
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8] relative"
+              >
                 <FaShoppingCart className="text-[#8B7355] text-xl" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#8B7355] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                    {totalItems}
+                  </span>
+                )}
               </button>
               <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8]">
                 <FaBell className="text-[#8B7355] text-xl" />
@@ -220,8 +232,16 @@ export default function Header() {
             
             {/* Mobile Icons */}
             <div className="flex justify-center space-x-6 mt-6 pb-4 border-t border-gray-200 pt-6">
-              <button className="w-12 h-12 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8] transition-colors duration-300">
+              <button 
+                onClick={() => setShowCart(true)}
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8] transition-colors duration-300 relative"
+              >
                 <FaShoppingCart className="text-[#8B7355] text-2xl" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#8B7355] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                    {totalItems}
+                  </span>
+                )}
               </button>
               <button className="w-12 h-12 flex items-center justify-center rounded-full bg-[#F5F0EB] hover:bg-[#E8E0D8] transition-colors duration-300">
                 <FaBell className="text-[#8B7355] text-2xl" />
@@ -249,6 +269,9 @@ export default function Header() {
             }}  
           />
         )}
+
+        {/* Cart Modal */}
+        <CartModal isOpen={showCart} onClose={() => setShowCart(false)} />
       </div>
     </header>
   );
