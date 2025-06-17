@@ -13,60 +13,67 @@ const flowers = [
 
 export default function FlowerBouquetsPage() {
   return (
-    <div className="min-h-screen bg-[#e6e2e0] py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-[#f8f5f3] to-[#e6e2e0]">
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-[1400px] mx-auto"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-20"
       >
-        <h1 className="text-4xl md:text-6xl font-bold text-center mb-16 text-[#4A4A4A] tracking-tight">
-          FLOWER <span className="text-[#8B7355]">BOUQUETS</span>
-        </h1>
+        <motion.h1 
+          initial={{ y: -20 }}
+          animate={{ y: 0 }}
+          className="text-5xl md:text-7xl font-light text-center mb-20 text-[#4A4A4A]"
+        >
+          Floral <span className="font-semibold italic text-[#8B7355]">Collections</span>
+        </motion.h1>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8">
           {flowers.map((flower, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group relative bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500"
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "50px" }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="break-inside-avoid-column group"
             >
-              <div className="relative aspect-square">
-                <Image
-                  src={flower.image}
-                  alt={flower.name}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  priority={index < 4}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
-              </div>
-              
-              <div className="p-6 relative">
-                <div className="absolute -top-10 right-6 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg">
-                  <p className="text-[#8B7355] font-semibold">{flower.price}</p>
+              <div className="relative overflow-hidden rounded-2xl">
+                <div className="relative aspect-[3/4]">
+                  <Image
+                    src={flower.image}
+                    alt={flower.name}
+                    fill
+                    className="object-cover transition-all duration-700 group-hover:scale-110"
+                    priority={index < 4}
+                  />
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
                 
-                <h2 className="text-xl font-bold text-[#4A4A4A] mb-4 mt-2">
-                  {flower.name}
-                </h2>
-                
-                <button className="w-full bg-[#8B7355] text-white py-3.5 rounded-xl
-                  hover:bg-[#6F5B3E] transition-all duration-300 text-sm font-medium
-                  flex items-center justify-center gap-2 group/btn"
-                >
-                  <span>ADD TO CART</span>
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    className="h-5 w-5 transform group-hover/btn:translate-x-1 transition-transform" 
-                    viewBox="0 0 20 20" 
-                    fill="currentColor"
-                  >
-                    <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
+                <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                  <div className="bg-white/95 backdrop-blur-md p-6 rounded-xl shadow-xl">
+                    <h2 className="text-2xl font-light text-[#4A4A4A] mb-2">
+                      {flower.name}
+                    </h2>
+                    <p className="text-[#8B7355] font-semibold text-lg mb-4">
+                      {flower.price}
+                    </p>
+                    <button className="w-full bg-[#8B7355] text-white py-4 rounded-lg
+                      hover:bg-[#6F5B3E] transition-colors duration-300 text-sm uppercase tracking-wider
+                      flex items-center justify-center gap-3"
+                    >
+                      Add to Collection
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        className="h-4 w-4" 
+                        viewBox="0 0 20 20" 
+                        fill="currentColor"
+                      >
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
               </div>
             </motion.div>
           ))}

@@ -4,14 +4,14 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 const flowers = [
-  { name: "Wedding Centerpiece", price: "750 AED", image: "/images/IMG_8542.jpg" },
-  { name: "Corporate Event Setup", price: "1200 AED", image: "/images/IMG_8543.jpg" },
-  { name: "Birthday Celebration", price: "450 AED", image: "/images/IMG_8544.jpg" },
-  { name: "Luxury Event Design", price: "2500 AED", image: "/images/IMG_8545.jpg" },
-  { name: "Special Occasion", price: "850 AED", image: "/images/IMG_8546.jpg" },
+  { name: "Roses", price: "PER STEM - 10 AED", image: "/images/IMG_85462.jpg" },
+  { name: "Peonies", price: "PER STEM - 40 AED", image: "/images/IMG_8545.jpg" },
+  { name: "Hydreangeas", price: "PER STEM - 35 AED", image: "/images/IMG_8542.jpg" },
+  { name: "Alstromerias", price: "PER STEM - 8 AED", image: "/images/IMG_8546.jpg" },
+  { name: "Spray Roses", price: "PER STEM - 15 AED", image: "/images/IMG_8544.jpg" },
 ];
 
-export default function FlowersForEventsPage() {
+export default function EverydayFlowersPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f8f5f3] to-[#e6e2e0]">
       <motion.div 
@@ -24,7 +24,7 @@ export default function FlowersForEventsPage() {
           animate={{ y: 0 }}
           className="text-5xl md:text-7xl font-light text-center mb-20 text-[#4A4A4A]"
         >
-          Event <span className="font-semibold italic text-[#8B7355]">Flowers</span>
+          Everyday <span className="font-semibold italic text-[#8B7355]">Flowers</span>
         </motion.h1>
         
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8">
@@ -61,7 +61,7 @@ export default function FlowersForEventsPage() {
                       hover:bg-[#6F5B3E] transition-colors duration-300 text-sm uppercase tracking-wider
                       flex items-center justify-center gap-3"
                     >
-                      Request Quote
+                      Add to Cart
                       <svg 
                         xmlns="http://www.w3.org/2000/svg" 
                         className="h-4 w-4" 

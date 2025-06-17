@@ -24,14 +24,14 @@ const categories = [
 		description:
 			'Stunning floral designs for weddings, corporate events, and special occasions.',
 		image: '/images/IMG_8494.jpg',
-		link: '/category/flowers-for-events',
+		link: '/book-event',
 	},
 	{
 		title: 'FLORAL SUBSCRIPTION',
 		description:
 			'Regular flower deliveries to brighten your home or office.',
 		image: '/images/IMG_8495.jpg',
-		link: '/category/floral-subscription',
+		link: '/subcription',
 	},
 	{
 		title: 'BOX ARRANGEMENTS',
@@ -46,6 +46,13 @@ const categories = [
 			'Exquisite bridal bouquets and wedding flower arrangements.',
 		image: '/images/IMG_8497.jpg',
 		link: '/category/bridal-bouquets',
+	},
+	{
+		title: 'EVERYDAY FLOWERS',
+		description:
+			'Fresh individual stems and everyday flowers for your home or special someone.',
+		image: '/images/IMG_8530.jpg',
+		link: '/category/everyday-flowers',
 	},
 ];
 
