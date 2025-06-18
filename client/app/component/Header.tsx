@@ -10,6 +10,7 @@ import SignUp from './SignUp';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import CartModal from './CartModal';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,33 +21,36 @@ export default function Header() {
   const [showCart, setShowCart] = useState(false);
   const { totalItems } = useCart();
   const router = useRouter();
-
-  useEffect(() => {
-    checkLoginStatus();
-  }, []);
+  const { isAuthenticated, logout } = useAuth();
 
   const checkLoginStatus = () => {
     const token = localStorage.getItem('userToken');
-    if (token) {
-      setIsLoggedIn(true);
-      fetchUserProfile();
-    } else {
-      setIsLoggedIn(false);
-      setUserImage('');
-    }
+    setIsLoggedIn(!!token);
   };
+
+  useEffect(() => {
+    checkLoginStatus();
+    if (isAuthenticated) {
+      fetchUserProfile();
+    }
+  }, [isAuthenticated]);
 
   const fetchUserProfile = async () => {
     try {
       const token = localStorage.getItem('userToken');
+      if (!token) return;
+
       const response = await fetch('http://localhost:3001/api/users/profile', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      const data = await response.json();
-      if (data.profileImage) {
-        setUserImage(data.profileImage);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.profileImage) {
+          setUserImage(data.profileImage);
+        }
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -54,10 +58,15 @@ export default function Header() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('userToken');
+    logout();
     setIsLoggedIn(false);
     setUserImage('');
     router.push('/');
+    
+    // Force page refresh to update all components with new auth state
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   };
 
   const handleProfileClick = () => {

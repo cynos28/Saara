@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 interface UserData {
   name: string;
@@ -32,28 +33,35 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const { logout } = useAuth();
 
   useEffect(() => {
-    const token = localStorage.getItem('userToken');
-    if (!token) {
-      router.replace('/');
-    } else {
-      fetchUserProfile();
-    }
-  }, [router]);
+    fetchUserProfile();
+  }, []);
 
   const fetchUserProfile = async () => {
     try {
       const token = localStorage.getItem('userToken');
+      if (!token) {
+        router.push('/auth');
+        return;
+      }
+
       const response = await fetch('http://localhost:3001/api/users/profile', {
         headers: {
-          Authorization: `Bearer ${token}`,
-        },
+          'Authorization': `Bearer ${token}`
+        }
       });
-      const data = await response.json();
-      setUserData(data);
+
+      if (response.ok) {
+        const data = await response.json();
+        setUserData(data);
+      } else {
+        router.push('/auth');
+      }
     } catch (error) {
       console.error('Error fetching profile:', error);
+      router.push('/auth');
     }
   };
 
@@ -100,8 +108,13 @@ export default function ProfilePage() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('userToken');
+    logout();
     router.replace('/');
+    
+    // Force page refresh to update all components with new auth state
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   };
 
   const handleUpdate = async () => {
@@ -146,8 +159,13 @@ export default function ProfilePage() {
         });
 
         if (response.ok) {
-          localStorage.removeItem('userToken');
+          logout();
           router.replace('/');
+          
+          // Force page refresh to update all components with new auth state
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
         } else {
           const data = await response.json();
           alert(data.message || 'Delete failed');

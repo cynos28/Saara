@@ -54,6 +54,11 @@ export default function SignUp({ onClose, onSwitchToSignIn }: SignUpProps) {
         } else {
           router.push('/');
         }
+        
+        // Force page refresh to update all components with new auth state
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
       } else {
         alert(data.message || 'Registration failed');
       }
