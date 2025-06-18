@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import Notification from '@/app/component/Notification';
 
 interface CartModalProps {
   isOpen: boolean;
@@ -10,6 +13,44 @@ interface CartModalProps {
 
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
   const { items, removeFromCart, updateQuantity, totalItems } = useCart();
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  const [showAuthNotification, setShowAuthNotification] = useState(false);
+
+  const calculateTotal = () => {
+    return items.reduce((total, item) => {
+      let price: number;
+      
+      // Handle both string and number price types
+      if (typeof item.price === 'string') {
+        price = parseFloat(item.price.replace(/[^0-9.]/g, ''));
+      } else if (typeof item.price === 'number') {
+        price = item.price;
+      } else {
+        price = 0; // fallback
+      }
+      
+      return total + (price * item.quantity);
+    }, 0);
+  };
+
+  const handleCheckout = () => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      setShowAuthNotification(true);
+      return;
+    }
+
+    // If authenticated, proceed to checkout
+    onClose();
+    router.push('/payment-page');
+  };
+
+  const handleAuthAction = () => {
+    setShowAuthNotification(false);
+    onClose(); // Close cart modal
+    router.push('/auth'); // Navigate to auth page
+  };
 
   if (!isOpen) return null;
 
@@ -115,18 +156,58 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
             )}
 
             {items.length > 0 && (
-              <div className="mt-6">
+              <div className="mt-6 space-y-4">
+                {/* Authentication Status */}
+                {!isAuthenticated && (
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <div className="flex items-center">
+                      <svg className="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
+                      <span className="text-sm text-yellow-800">
+                        Please sign in to complete your purchase
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="border-t border-gray-200 pt-4">
+                  <div className="flex justify-between text-gray-600 mb-2">
+                    <span>Subtotal</span>
+                    <span>${calculateTotal().toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-600 mb-2">
+                    <span>Delivery</span>
+                    <span>Free</span>
+                  </div>
+                  <div className="flex justify-between text-lg font-semibold text-[#4A4A4A] border-t border-gray-200 pt-2">
+                    <span>Total</span>
+                    <span>${calculateTotal().toFixed(2)}</span>
+                  </div>
+                </div>
                 <button
+                  onClick={handleCheckout}
                   className="w-full bg-[#8B7355] text-white py-4 rounded-lg
-                    hover:bg-[#6F5B3E] transition-colors duration-300 text-sm uppercase tracking-wider"
+                    hover:bg-[#6F5B3E] transition-colors duration-300 text-sm uppercase tracking-wider font-medium"
                 >
-                  Proceed to Checkout
+                  {isAuthenticated ? 'Proceed to Checkout' : 'Sign In to Checkout'}
                 </button>
               </div>
             )}
           </div>
         </motion.div>
       </motion.div>
+
+      {/* Authentication Notification */}
+      <Notification
+        isOpen={showAuthNotification}
+        onClose={() => setShowAuthNotification(false)}
+        title="Authentication Required"
+        message="You need to be registered and logged in to proceed to checkout. Please sign up or sign in to continue with your purchase."
+        type="warning"
+        onAction={handleAuthAction}
+        actionText="Sign Up / Sign In"
+      />
     </AnimatePresence>
   );
 } 

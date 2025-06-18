@@ -53,7 +53,9 @@ exports.loginUser = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        isAdmin: user.isAdmin,
+        address: user.address || '',
+        gender: user.gender || '',
+        isAdmin: user.isAdmin || false,
         token: generateToken(user._id)
       });
     } else {

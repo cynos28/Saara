@@ -1,5 +1,7 @@
 "use client";
 import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 interface SignUpProps {
   onClose: () => void;
@@ -7,6 +9,8 @@ interface SignUpProps {
 }
 
 export default function SignUp({ onClose, onSwitchToSignIn }: SignUpProps) {
+  const { login } = useAuth();
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -30,9 +34,26 @@ export default function SignUp({ onClose, onSwitchToSignIn }: SignUpProps) {
 
       if (response.ok) {
         console.log('Registration successful:', data);
-        // Store token in localStorage
-        localStorage.setItem('userToken', data.token);
+        // Store user data and token using AuthContext
+        // Server returns user data directly, not nested under 'user' property
+        login(data.token, {
+          id: data._id,
+          name: data.name,
+          email: data.email,
+          address: data.address,
+          gender: data.gender,
+          isAdmin: data.isAdmin || false // Handle admin status
+        });
+        
+        // Close the modal first
         onClose();
+        
+        // Redirect based on user role
+        if (data.isAdmin) {
+          router.push('/admin');
+        } else {
+          router.push('/');
+        }
       } else {
         alert(data.message || 'Registration failed');
       }

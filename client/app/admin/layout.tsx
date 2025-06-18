@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 import { 
   LayoutDashboard, 
   Flower, 
@@ -18,6 +19,8 @@ import {
   Globe,
   UserCheck,
   LogOut,
+  Shield,
+  AlertTriangle,
 } from 'lucide-react';
 
 const navigation = [
@@ -40,14 +43,68 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
+  const { isAuthenticated, isAdmin, logout } = useAuth();
+
+  useEffect(() => {
+    // Check authentication and admin status
+    console.log('Admin layout - isAuthenticated:', isAuthenticated, 'isAdmin:', isAdmin);
+    
+    if (!isAuthenticated) {
+      console.log('Not authenticated, redirecting to auth');
+      router.push('/auth');
+      return;
+    }
+    
+    if (!isAdmin) {
+      console.log('Not admin, redirecting to home');
+      router.push('/');
+      return;
+    }
+    
+    console.log('Admin authenticated, showing dashboard');
+    setIsLoading(false);
+  }, [isAuthenticated, isAdmin, router]);
 
   const handleLogout = () => {
-    localStorage.removeItem('userToken');
-    localStorage.removeItem('isAdmin');
+    logout();
     router.push('/');
   };
+
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#F5F0EB] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8B7355] mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading admin dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show access denied if not admin
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-[#F5F0EB] flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-6">
+          <AlertTriangle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
+          <p className="text-gray-600 mb-6">
+            You don't have permission to access the admin dashboard. Only administrators can view this page.
+          </p>
+          <button
+            onClick={() => router.push('/')}
+            className="bg-[#8B7355] text-white px-6 py-3 rounded-lg hover:bg-[#6d5a44] transition-colors"
+          >
+            Go to Home
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F5F0EB]">
@@ -57,7 +114,7 @@ export default function AdminLayout({
         <div className="relative flex flex-col w-full max-w-xs bg-white shadow-xl">
           <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
             <div className="flex items-center space-x-2">
-              <Flower className="h-8 w-8 text-[#8B7355]" />
+              <Shield className="h-8 w-8 text-[#8B7355]" />
               <span className="text-xl font-bold text-gray-900">FloralAdmin</span>
             </div>
             <button
@@ -95,7 +152,7 @@ export default function AdminLayout({
         <div className="flex flex-col flex-grow bg-white border-r border-gray-200 shadow-sm">
           <div className="flex items-center h-16 px-4 border-b border-gray-200">
             <div className="flex items-center space-x-2">
-              <Flower className="h-8 w-8 text-[#8B7355]" />
+              <Shield className="h-8 w-8 text-[#8B7355]" />
               <span className="text-xl font-bold text-gray-900">FloralAdmin</span>
             </div>
           </div>
