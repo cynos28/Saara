@@ -2,8 +2,12 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function FloralSubscriptionPage() {
+  const [subscriptionType, setSubscriptionType] = useState('weekly');
+  const [colorTheme, setColorTheme] = useState('soft-pastels');
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f8f5f3] to-[#e6e2e0]">
       <motion.div 
@@ -22,42 +26,165 @@ export default function FloralSubscriptionPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-2xl mx-auto"
+          className="max-w-4xl mx-auto"
         >
-          <div className="bg-white p-12 rounded-[2rem] shadow-lg">
+          <div className="bg-white/95 backdrop-blur-md p-12 rounded-[2rem] shadow-lg">
             <div className="space-y-8">
+              {/* Subscription Type Selection */}
               <div className="space-y-4">
-                <label className="block text-gray-800 text-lg font-medium">Select Flowers</label>
-                <select className="w-full p-4 rounded-full bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none">
+                <label className="block text-gray-800 text-xl font-semibold mb-4">Subscription Type</label>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <button
+                    onClick={() => setSubscriptionType('weekly')}
+                    className={`p-6 rounded-2xl border-2 transition-all duration-300 ${
+                      subscriptionType === 'weekly'
+                        ? 'border-[#8B7355] bg-[#8B7355]/5'
+                        : 'border-gray-200 hover:border-[#8B7355]/40'
+                    }`}
+                  >
+                    <div className="text-left">
+                      <h3 className="text-lg font-semibold text-[#4A4A4A] mb-2">Weekly Subscription</h3>
+                      <p className="text-gray-600 text-sm">Fresh flowers every week for one month</p>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setSubscriptionType('monthly')}
+                    className={`p-6 rounded-2xl border-2 transition-all duration-300 ${
+                      subscriptionType === 'monthly'
+                        ? 'border-[#8B7355] bg-[#8B7355]/5'
+                        : 'border-gray-200 hover:border-[#8B7355]/40'
+                    }`}
+                  >
+                    <div className="text-left">
+                      <h3 className="text-lg font-semibold text-[#4A4A4A] mb-2">Monthly Subscription</h3>
+                      <p className="text-gray-600 text-sm">A fresh touch of elegance, delivered once a month</p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Color Theme Selection */}
+              <div className="space-y-4">
+                <label className="block text-gray-800 text-xl font-semibold mb-4">Color Theme</label>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <button
+                    onClick={() => setColorTheme('soft-pastels')}
+                    className={`p-6 rounded-2xl border-2 transition-all duration-300 ${
+                      colorTheme === 'soft-pastels'
+                        ? 'border-[#8B7355] bg-[#8B7355]/5'
+                        : 'border-gray-200 hover:border-[#8B7355]/40'
+                    }`}
+                  >
+                    <div className="text-center">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-200 to-purple-200 mx-auto mb-3"></div>
+                      <h3 className="text-lg font-semibold text-[#4A4A4A]">Soft Pastels</h3>
+                      <p className="text-gray-600 text-sm mt-1">Gentle, romantic hues</p>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setColorTheme('white-green')}
+                    className={`p-6 rounded-2xl border-2 transition-all duration-300 ${
+                      colorTheme === 'white-green'
+                        ? 'border-[#8B7355] bg-[#8B7355]/5'
+                        : 'border-gray-200 hover:border-[#8B7355]/40'
+                    }`}
+                  >
+                    <div className="text-center">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-white to-green-200 mx-auto mb-3"></div>
+                      <h3 className="text-lg font-semibold text-[#4A4A4A]">White & Green</h3>
+                      <p className="text-gray-600 text-sm mt-1">Clean, natural elegance</p>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setColorTheme('bright-mix')}
+                    className={`p-6 rounded-2xl border-2 transition-all duration-300 ${
+                      colorTheme === 'bright-mix'
+                        ? 'border-[#8B7355] bg-[#8B7355]/5'
+                        : 'border-gray-200 hover:border-[#8B7355]/40'
+                    }`}
+                  >
+                    <div className="text-center">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-300 to-red-400 mx-auto mb-3"></div>
+                      <h3 className="text-lg font-semibold text-[#4A4A4A]">Bright Mix</h3>
+                      <p className="text-gray-600 text-sm mt-1">Vibrant, energetic colors</p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Flower Selection */}
+              <div className="space-y-4">
+                <label className="block text-gray-800 text-xl font-semibold">Flower Selection</label>
+                <select className="w-full p-4 rounded-2xl bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none transition-all duration-300">
                   <option>Mixed Seasonal Bouquet</option>
-                  <option>Premium Roses</option>
+                  <option>Premium Roses Collection</option>
                   <option>Wildflowers Selection</option>
+                  <option>Hydrangeas & Peonies</option>
+                  <option>Spray Roses & Alstroemeria</option>
                 </select>
               </div>
 
+              {/* Delivery Date */}
               <div className="space-y-4">
-                <label className="block text-gray-800 text-lg font-medium">Select Date</label>
+                <label className="block text-gray-800 text-xl font-semibold">Start Date</label>
                 <input 
                   type="date" 
-                  className="w-full p-4 rounded-full bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none"
+                  className="w-full p-4 rounded-2xl bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none transition-all duration-300"
                 />
               </div>
 
+              {/* Delivery Details */}
               <div className="space-y-4">
-                <label className="block text-gray-800 text-lg font-medium">Delivery Details</label>
-                <input 
-                  type="text"
-                  placeholder="Receiver's Name"
-                  className="w-full p-4 rounded-full bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none mb-4 placeholder-gray-500"
-                />
-                <input 
-                  type="text"
-                  placeholder="Delivery Location"
-                  className="w-full p-4 rounded-full bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none placeholder-gray-500"
+                <label className="block text-gray-800 text-xl font-semibold">Delivery Details</label>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <input 
+                    type="text"
+                    placeholder="Receiver's Name"
+                    className="w-full p-4 rounded-2xl bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none placeholder-gray-500 transition-all duration-300"
+                  />
+                  <input 
+                    type="tel"
+                    placeholder="Phone Number"
+                    className="w-full p-4 rounded-2xl bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none placeholder-gray-500 transition-all duration-300"
+                  />
+                </div>
+                <textarea 
+                  placeholder="Delivery Address"
+                  rows={3}
+                  className="w-full p-4 rounded-2xl bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none placeholder-gray-500 transition-all duration-300 resize-none"
                 />
               </div>
 
-              <button className="w-full bg-[#8B7355] text-white py-4 rounded-full hover:bg-[#6F5B3E] transition-all duration-300 transform hover:scale-105 font-medium text-lg">
+              {/* Special Instructions */}
+              <div className="space-y-4">
+                <label className="block text-gray-800 text-xl font-semibold">Special Instructions (Optional)</label>
+                <textarea 
+                  placeholder="Any special requests or delivery instructions..."
+                  rows={3}
+                  className="w-full p-4 rounded-2xl bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none placeholder-gray-500 transition-all duration-300 resize-none"
+                />
+              </div>
+
+              {/* Summary */}
+              <div className="bg-[#8B7355]/5 p-6 rounded-2xl">
+                <h3 className="text-lg font-semibold text-[#4A4A4A] mb-3">Subscription Summary</h3>
+                <div className="space-y-2 text-gray-700">
+                  <div className="flex justify-between">
+                    <span>Type:</span>
+                    <span className="font-medium">{subscriptionType === 'weekly' ? 'Weekly' : 'Monthly'} Subscription</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Color Theme:</span>
+                    <span className="font-medium capitalize">{colorTheme.replace('-', ' & ')}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Vase Included:</span>
+                    <span className="font-medium">Yes (first delivery)</span>
+                  </div>
+                </div>
+              </div>
+
+              <button className="w-full bg-[#8B7355] text-white py-5 rounded-2xl hover:bg-[#6F5B3E] transition-all duration-300 transform hover:scale-105 font-semibold text-xl">
                 Confirm Subscription
               </button>
             </div>
@@ -65,7 +192,7 @@ export default function FloralSubscriptionPage() {
 
           <Link 
             href="/subcription"
-            className="block text-center mt-8 text-[#6F5B3E] hover:text-[#8B7355] font-medium transition-colors"
+            className="block text-center mt-8 text-[#6F5B3E] hover:text-[#8B7355] font-medium transition-colors text-lg"
           >
             ← Back to Plans
           </Link>
