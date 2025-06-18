@@ -15,6 +15,7 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isLoading: boolean;
   login: (token: string, userData: User) => void;
   logout: () => void;
   checkAuth: () => boolean;
@@ -26,29 +27,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Check authentication on mount
   useEffect(() => {
-    const token = localStorage.getItem('userToken');
-    const userData = localStorage.getItem('userData');
-    const adminStatus = localStorage.getItem('isAdmin');
-    
-    console.log('AuthContext - Token:', !!token, 'UserData:', !!userData, 'AdminStatus:', adminStatus);
-    
-    if (token && userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        console.log('AuthContext - Parsed user:', parsedUser);
-        setUser(parsedUser);
-        setIsAuthenticated(true);
-        const adminCheck = adminStatus === 'true' || parsedUser.isAdmin === true;
-        console.log('AuthContext - Setting admin status:', adminCheck);
-        setIsAdmin(adminCheck);
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-        logout();
+    const initializeAuth = () => {
+      const token = localStorage.getItem('userToken');
+      const userData = localStorage.getItem('userData');
+      const adminStatus = localStorage.getItem('isAdmin');
+      
+      console.log('AuthContext - Token:', !!token, 'UserData:', !!userData, 'AdminStatus:', adminStatus);
+      
+      if (token && userData) {
+        try {
+          const parsedUser = JSON.parse(userData);
+          console.log('AuthContext - Parsed user:', parsedUser);
+          setUser(parsedUser);
+          setIsAuthenticated(true);
+          const adminCheck = adminStatus === 'true' || parsedUser.isAdmin === true;
+          console.log('AuthContext - Setting admin status:', adminCheck);
+          setIsAdmin(adminCheck);
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+          logout();
+        }
       }
-    }
+      setIsLoading(false);
+    };
+
+    // Use setTimeout to ensure this runs after the component is mounted
+    setTimeout(initializeAuth, 0);
   }, []);
 
   const login = (token: string, userData: User) => {
@@ -86,6 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         isAuthenticated,
         isAdmin,
+        isLoading,
         login,
         logout,
         checkAuth,
