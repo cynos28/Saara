@@ -205,7 +205,7 @@ export default function ArrangementsPage() {
               
               <div className="flex items-center justify-between mt-4">
                 <div>
-                  <span className="text-xl font-bold text-gray-900">${arrangement.price}</span>
+                  <span className="text-xl font-bold text-gray-900">AED {arrangement.price}</span>
                   <span className="text-sm text-gray-500 ml-2">Stock: {arrangement.stock}</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -269,7 +269,7 @@ export default function ArrangementsPage() {
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <span className="text-sm font-medium text-gray-500">Price</span>
-                  <p className="text-lg font-bold text-gray-900">${selectedArrangement.price}</p>
+                  <p className="text-lg font-bold text-gray-900">AED {selectedArrangement.price}</p>
                 </div>
                 <div>
                   <span className="text-sm font-medium text-gray-500">Category</span>

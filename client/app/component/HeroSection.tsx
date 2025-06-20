@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { FaCalculator } from 'react-icons/fa';
 
 export default function HeroSection() {
   return (
@@ -41,8 +42,9 @@ export default function HeroSection() {
                   </Link>
                   <Link 
                     href="/budget-calculator"
-                    className="w-56 py-3 text-center bg-[#BE5B50] text-white hover:bg-[#A64B41] transition-colors duration-300 rounded text-sm font-medium"
+                    className="w-56 py-3 flex items-center justify-center gap-2 bg-[#8B7355] text-white hover:bg-[#6F5B3E] transition-colors duration-300 rounded text-sm font-medium"
                   >
+                    <FaCalculator className="h-5 w-5" />
                     BUDGET CALCULATOR
                   </Link>
                 </div>

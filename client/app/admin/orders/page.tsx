@@ -309,7 +309,7 @@ export default function OrdersPage() {
                       <div className="flex items-center">
                         <DollarSign className="h-4 w-4 text-gray-400 mr-1" />
                         <span className="text-sm font-semibold text-gray-900">
-                          ${order.totalAmount.toFixed(2)}
+                          AED {order.totalAmount.toFixed(2)}
                         </span>
                       </div>
                     </td>
@@ -431,7 +431,7 @@ export default function OrdersPage() {
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium">Total Amount:</span>
                         <span className="text-sm font-semibold text-gray-900">
-                          ${selectedOrder.totalAmount.toFixed(2)}
+                          AED {selectedOrder.totalAmount.toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -476,10 +476,10 @@ export default function OrdersPage() {
                           </td>
                           <td className="px-4 py-3 text-sm text-gray-600">{item.quantity}</td>
                           <td className="px-4 py-3 text-sm text-gray-600">
-                            ${typeof item.price === 'string' ? parseFloat(item.price.replace(/[^0-9.]/g, '')).toFixed(2) : item.price.toFixed(2)}
+                            AED {typeof item.price === 'string' ? parseFloat(item.price.replace(/[^0-9.]/g, '')).toFixed(2) : item.price.toFixed(2)}
                           </td>
                           <td className="px-4 py-3 text-sm font-semibold text-gray-900">
-                            ${calculateItemTotal(item).toFixed(2)}
+                            AED {calculateItemTotal(item).toFixed(2)}
                           </td>
                         </tr>
                       ))}
@@ -487,7 +487,7 @@ export default function OrdersPage() {
                     <tfoot className="bg-gray-100">
                       <tr>
                         <td colSpan={3} className="px-4 py-3 text-sm font-semibold text-right">Total:</td>
-                        <td className="px-4 py-3 text-sm font-bold text-gray-900">${selectedOrder.totalAmount.toFixed(2)}</td>
+                        <td className="px-4 py-3 text-sm font-bold text-gray-900">AED {selectedOrder.totalAmount.toFixed(2)}</td>
                       </tr>
                     </tfoot>
                   </table>

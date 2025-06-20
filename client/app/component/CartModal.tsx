@@ -174,7 +174,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 <div className="border-t border-gray-200 pt-4">
                   <div className="flex justify-between text-gray-600 mb-2">
                     <span>Subtotal</span>
-                    <span>${calculateTotal().toFixed(2)}</span>
+                    <span>AED {calculateTotal().toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-gray-600 mb-2">
                     <span>Delivery</span>
@@ -182,7 +182,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                   </div>
                   <div className="flex justify-between text-lg font-semibold text-[#4A4A4A] border-t border-gray-200 pt-2">
                     <span>Total</span>
-                    <span>${calculateTotal().toFixed(2)}</span>
+                    <span>AED {calculateTotal().toFixed(2)}</span>
                   </div>
                 </div>
                 <button

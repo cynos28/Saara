@@ -257,7 +257,7 @@ export default function EventsPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    ${event.budget.toLocaleString()}
+                    AED {event.budget.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(event.status)}`}>
@@ -317,7 +317,7 @@ export default function EventsPage() {
                         <span className="text-sm">{selectedEvent.venue}</span>
                       </div>
                       <div className="flex items-center">
-                        <span className="text-sm font-medium">Budget: ${selectedEvent.budget.toLocaleString()}</span>
+                        <span className="text-sm font-medium">Budget: AED {selectedEvent.budget.toLocaleString()}</span>
                       </div>
                     </div>
                   </div>

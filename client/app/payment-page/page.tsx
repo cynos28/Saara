@@ -383,7 +383,7 @@ export default function PaymentPage() {
                       Processing Payment...
                     </div>
                   ) : (
-                    `Pay $${calculateTotal().toFixed(2)}`
+                    `Pay AED ${calculateTotal().toFixed(2)}`
                   )}
                 </button>
               </form>
@@ -418,7 +418,7 @@ export default function PaymentPage() {
                     </div>
                     <div className="text-right">
                       <p className="font-semibold text-[#4A4A4A]">
-                        ${(() => {
+                        AED {(() => {
                           let price: number;
                           if (typeof item.price === 'string') {
                             price = parseFloat(item.price.replace(/[^0-9.]/g, ''));
@@ -438,7 +438,7 @@ export default function PaymentPage() {
               <div className="border-t border-gray-200 pt-4 space-y-3">
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal ({totalItems} items)</span>
-                  <span>${calculateTotal().toFixed(2)}</span>
+                  <span>AED {calculateTotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Delivery</span>
@@ -446,7 +446,7 @@ export default function PaymentPage() {
                 </div>
                 <div className="flex justify-between text-lg font-semibold text-[#4A4A4A] border-t border-gray-200 pt-3">
                   <span>Total</span>
-                  <span>${calculateTotal().toFixed(2)}</span>
+                  <span>AED {calculateTotal().toFixed(2)}</span>
                 </div>
               </div>
 

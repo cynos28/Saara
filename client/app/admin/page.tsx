@@ -49,11 +49,11 @@ const stats = [
 ];
 
 const recentOrders = [
-  { id: '#ORD-001', customer: 'Sarah Johnson', product: 'Wedding Bouquet', amount: '$185.00', status: 'Pending' },
-  { id: '#ORD-002', customer: 'Mike Chen', product: 'Anniversary Arrangement', amount: '$95.50', status: 'Shipped' },
-  { id: '#ORD-003', customer: 'Emily Davis', product: 'Birthday Flowers', amount: '$67.25', status: 'Delivered' },
-  { id: '#ORD-004', customer: 'David Wilson', product: 'Sympathy Arrangement', amount: '$125.00', status: 'Pending' },
-  { id: '#ORD-005', customer: 'Lisa Brown', product: 'Valentine Special', amount: '$89.99', status: 'Shipped' },
+  { id: '#ORD-001', customer: 'Sarah Johnson', product: 'Wedding Bouquet', amount: 'AED 185.00', status: 'Pending' },
+  { id: '#ORD-002', customer: 'Mike Chen', product: 'Anniversary Arrangement', amount: 'AED 95.50', status: 'Shipped' },
+  { id: '#ORD-003', customer: 'Emily Davis', product: 'Birthday Flowers', amount: 'AED 67.25', status: 'Delivered' },
+  { id: '#ORD-004', customer: 'David Wilson', product: 'Sympathy Arrangement', amount: 'AED 125.00', status: 'Pending' },
+  { id: '#ORD-005', customer: 'Lisa Brown', product: 'Valentine Special', amount: 'AED 89.99', status: 'Shipped' },
 ];
 
 const upcomingEvents = [

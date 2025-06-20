@@ -344,7 +344,7 @@ export default function ProfilePage() {
               <div className="text-center p-4 bg-[#8B7355]/5 rounded-2xl">
                 <DollarSign className="h-8 w-8 text-[#8B7355] mx-auto mb-2" />
                 <div className="text-2xl font-bold text-[#4A4A4A]">
-                  ${orders.reduce((total, order) => total + order.totalAmount, 0).toFixed(2)}
+                  AED {orders.reduce((total, order) => total + order.totalAmount, 0).toFixed(2)}
                 </div>
                 <div className="text-sm text-gray-600">Total Spent</div>
               </div>
@@ -516,7 +516,7 @@ export default function ProfilePage() {
                               </div>
                               <div>
                                 <span className="text-gray-500">Total:</span>
-                                <div className="font-medium text-[#8B7355]">${order.totalAmount.toFixed(2)}</div>
+                                <div className="font-medium text-[#8B7355]">AED {order.totalAmount.toFixed(2)}</div>
                               </div>
                             </div>
                           </div>
