@@ -79,12 +79,12 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo Section - Adjusted size */}
           <Link href="/" className="flex items-center">
-            <div className="w-24 h-14 relative">
+            <div className="w-24 h-14 relative rounded-lg ">
               <Image
                 src="/logo.png"
                 alt="Logo"
                 fill
-                className="object-contain"
+                className="object-cover"
                 priority
               />
             </div>
