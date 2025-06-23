@@ -2,11 +2,45 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function FloralSubscriptionPage() {
   const [subscriptionType, setSubscriptionType] = useState('weekly');
   const [colorTheme, setColorTheme] = useState('soft-pastels');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [deliveryDates, setDeliveryDates] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!startDate) {
+      setEndDate('');
+      setDeliveryDates([]);
+      return;
+    }
+    const start = new Date(startDate);
+    let end;
+    if (subscriptionType === 'weekly') {
+      end = new Date(start);
+      end.setDate(start.getDate() + 28); // 4 weeks
+      // Calculate 4 weekly delivery dates
+      const dates = [];
+      for (let i = 0; i < 4; i++) {
+        const d = new Date(start);
+        d.setDate(start.getDate() + i * 7);
+        dates.push(d.toISOString().split('T')[0]);
+      }
+      setDeliveryDates(dates);
+    } else {
+      end = new Date(start);
+      end.setMonth(start.getMonth() + 1); // 1 month
+      setDeliveryDates([start.toISOString().split('T')[0]]);
+    }
+    // Format as yyyy-mm-dd for input/date display
+    const yyyy = end.getFullYear();
+    const mm = String(end.getMonth() + 1).padStart(2, '0');
+    const dd = String(end.getDate()).padStart(2, '0');
+    setEndDate(`${yyyy}-${mm}-${dd}`);
+  }, [startDate, subscriptionType]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f8f5f3] to-[#e6e2e0]">
@@ -129,6 +163,8 @@ export default function FloralSubscriptionPage() {
                 <label className="block text-gray-800 text-xl font-semibold">Start Date</label>
                 <input 
                   type="date" 
+                  value={startDate}
+                  onChange={e => setStartDate(e.target.value)}
                   className="w-full p-4 rounded-2xl bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none transition-all duration-300"
                 />
               </div>
@@ -176,6 +212,24 @@ export default function FloralSubscriptionPage() {
                   <div className="flex justify-between">
                     <span>Color Theme:</span>
                     <span className="font-medium capitalize">{colorTheme.replace('-', ' & ')}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Start Date:</span>
+                    <span className="font-medium">{startDate ? new Date(startDate).toLocaleDateString() : '-'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>End Date:</span>
+                    <span className="font-medium">{endDate ? new Date(endDate).toLocaleDateString() : '-'}</span>
+                  </div>
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                    <span>Delivery Dates:</span>
+                    <span className="font-medium">
+                      {deliveryDates.length === 0 ? '-' : deliveryDates.map((date, idx) => (
+                        <span key={date} className="inline-block mr-2">
+                          {new Date(date).toLocaleDateString()}{deliveryDates.length > 1 && idx < deliveryDates.length - 1 ? ',' : ''}
+                        </span>
+                      ))}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Vase Included:</span>
