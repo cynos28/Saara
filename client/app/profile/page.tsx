@@ -70,7 +70,7 @@ interface Order {
   createdAt: string;
 }
 
-type TabType = 'profile' | 'orders' | 'settings';
+type TabType = 'profile' | 'orders' | 'settings' | 'subscriptions';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -91,10 +91,23 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [ordersLoading, setOrdersLoading] = useState(false);
+  const [subscriptions, setSubscriptions] = useState<any[]>([]);
+  const [subsLoading, setSubsLoading] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editSub, setEditSub] = useState<any>(null);
+  const [editLoading, setEditLoading] = useState(false);
+  const [editForm, setEditForm] = useState({
+    colorTheme: '',
+    receiverName: '',
+    phone: '',
+    address: '',
+    specialInstructions: ''
+  });
 
   useEffect(() => {
     fetchUserProfile();
     fetchUserOrders();
+    fetchUserSubscriptions();
   }, []);
 
   const fetchUserProfile = async () => {
@@ -143,6 +156,26 @@ export default function ProfilePage() {
       console.error('Error fetching orders:', error);
     } finally {
       setOrdersLoading(false);
+    }
+  };
+
+  const fetchUserSubscriptions = async () => {
+    setSubsLoading(true);
+    try {
+      const token = localStorage.getItem('userToken');
+      const response = await fetch('http://localhost:3001/api/subscriptions/user', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setSubscriptions(data);
+      }
+    } catch (error) {
+      console.error('Error fetching subscriptions:', error);
+    } finally {
+      setSubsLoading(false);
     }
   };
 
@@ -288,6 +321,72 @@ export default function ProfilePage() {
     return price * item.quantity;
   };
 
+  const handleCancelSubscription = async (id: string) => {
+    if (!window.confirm('Are you sure you want to cancel this subscription?')) return;
+    try {
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`http://localhost:3001/api/subscriptions/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (response.ok) {
+        fetchUserSubscriptions();
+        alert('Subscription cancelled.');
+      } else {
+        alert('Failed to cancel subscription.');
+      }
+    } catch (err) {
+      alert('Failed to cancel subscription.');
+    }
+  };
+
+  const handleUpdateSubscription = (sub: any) => {
+    setEditSub(sub);
+    setEditForm({
+      colorTheme: sub.colorTheme || '',
+      receiverName: sub.receiverName || '',
+      phone: sub.phone || '',
+      address: sub.address || '',
+      specialInstructions: sub.specialInstructions || ''
+    });
+    setEditModalOpen(true);
+  };
+
+  const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editSub) return;
+    setEditLoading(true);
+    try {
+      const token = localStorage.getItem('userToken');
+      const res = await fetch(`http://localhost:3001/api/subscriptions/${editSub._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify(editForm)
+      });
+      if (res.ok) {
+        setEditModalOpen(false);
+        setEditSub(null);
+        fetchUserSubscriptions();
+        alert('Subscription updated!');
+      } else {
+        alert('Failed to update subscription.');
+      }
+    } catch (err) {
+      alert('Failed to update subscription.');
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#f8f5f3] to-[#e6e2e0] flex items-center justify-center">
@@ -366,6 +465,7 @@ export default function ProfilePage() {
             {[
               { id: 'profile', label: 'Profile Info', icon: User },
               { id: 'orders', label: 'Order History', icon: ShoppingBag },
+              { id: 'subscriptions', label: 'Subscriptions', icon: Package },
               { id: 'settings', label: 'Account Settings', icon: Settings }
             ].map((tab) => (
               <button
@@ -540,6 +640,107 @@ export default function ProfilePage() {
               </div>
             )}
 
+            {/* Subscriptions Tab */}
+            {activeTab === 'subscriptions' && (
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-xl font-semibold text-[#4A4A4A]">My Subscriptions</h3>
+                  <button
+                    onClick={fetchUserSubscriptions}
+                    disabled={subsLoading}
+                    className="flex items-center gap-2 px-4 py-2 bg-[#8B7355] text-white rounded-lg hover:bg-[#6F5B3E] transition-colors disabled:opacity-50"
+                  >
+                    <RefreshCw className={`h-4 w-4 ${subsLoading ? 'animate-spin' : ''}`} />
+                    Refresh
+                  </button>
+                </div>
+                {subsLoading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="flex items-center space-x-2">
+                      <RefreshCw className="h-6 w-6 animate-spin text-[#8B7355]" />
+                      <span className="text-gray-600">Loading subscriptions...</span>
+                    </div>
+                  </div>
+                ) : subscriptions.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No subscriptions yet</h3>
+                    <p className="text-gray-500 mb-6">Subscribe to a plan to see it here.</p>
+                    <button
+                      onClick={() => router.push('/category/floral-subscription')}
+                      className="bg-[#8B7355] text-white px-6 py-3 rounded-lg hover:bg-[#6F5B3E] transition-colors"
+                    >
+                      Subscribe Now
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {subscriptions.map((sub) => (
+                      <div key={sub._id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-4 mb-3">
+                              <span className="text-sm font-medium text-gray-500">#{sub._id.slice(-8)}</span>
+                              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${sub.status === 'active' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-red-100 text-red-800 border-red-200'}`}>
+                                {sub.status === 'active' ? <CheckCircle className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
+                                <span className="ml-1 capitalize">{sub.status}</span>
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                              <div>
+                                <span className="text-gray-500">Type:</span>
+                                <div className="font-medium">{sub.subscriptionType}</div>
+                              </div>
+                              <div>
+                                <span className="text-gray-500">Start:</span>
+                                <div className="font-medium">{sub.startDate ? new Date(sub.startDate).toLocaleDateString() : '-'}</div>
+                              </div>
+                              <div>
+                                <span className="text-gray-500">End:</span>
+                                <div className="font-medium">{sub.endDate ? new Date(sub.endDate).toLocaleDateString() : '-'}</div>
+                              </div>
+                            </div>
+                            <div className="mt-2 text-sm text-gray-600">
+                              <span>Receiver: {sub.receiverName} | Phone: {sub.phone}</span><br />
+                              <span>Address: {sub.address}</span>
+                            </div>
+                            <div className="mt-2 text-sm text-gray-600">
+                              <span>Delivery Dates: {sub.deliveryDates && sub.deliveryDates.map((d: string, i: number) => new Date(d).toLocaleDateString()).join(', ')}</span>
+                            </div>
+                            {sub.specialInstructions && (
+                              <div className="mt-2 text-sm text-gray-600">
+                                <span>Instructions: {sub.specialInstructions}</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {sub.status === 'active' && (
+                              <>
+                                <button
+                                  onClick={() => handleUpdateSubscription(sub)}
+                                  className="flex items-center gap-2 px-4 py-2 text-[#8B7355] border border-[#8B7355] rounded-lg hover:bg-[#8B7355] hover:text-white transition-colors"
+                                >
+                                  <Edit3 className="h-4 w-4" />
+                                  Update
+                                </button>
+                                <button
+                                  onClick={() => handleCancelSubscription(sub._id)}
+                                  className="flex items-center gap-2 px-4 py-2 text-red-600 border border-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-colors"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                  Cancel
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Settings Tab */}
             {activeTab === 'settings' && (
               <div className="space-y-6">
@@ -592,6 +793,45 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Edit Subscription Modal */}
+      {editModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg relative">
+            <button onClick={() => setEditModalOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><X className="h-6 w-6" /></button>
+            <h2 className="text-2xl font-semibold mb-6 text-[#4A4A4A]">Edit Subscription</h2>
+            <form onSubmit={handleEditSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Color Theme</label>
+                <select name="colorTheme" value={editForm.colorTheme} onChange={handleEditFormChange} className="w-full p-3 border border-gray-300 rounded-lg">
+                  <option value="soft-pastels">Soft Pastels</option>
+                  <option value="white-green">White & Green</option>
+                  <option value="bright-mix">Bright Mix</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Receiver Name</label>
+                <input name="receiverName" value={editForm.receiverName} onChange={handleEditFormChange} className="w-full p-3 border border-gray-300 rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                <input name="phone" value={editForm.phone} onChange={handleEditFormChange} className="w-full p-3 border border-gray-300 rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                <input name="address" value={editForm.address} onChange={handleEditFormChange} className="w-full p-3 border border-gray-300 rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Special Instructions</label>
+                <textarea name="specialInstructions" value={editForm.specialInstructions} onChange={handleEditFormChange} className="w-full p-3 border border-gray-300 rounded-lg resize-none" />
+              </div>
+              <button type="submit" disabled={editLoading} className="w-full bg-[#8B7355] text-white py-3 rounded-lg hover:bg-[#6F5B3E] transition-colors font-semibold text-lg">
+                {editLoading ? 'Saving...' : 'Save Changes'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

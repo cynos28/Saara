@@ -10,6 +10,11 @@ export default function FloralSubscriptionPage() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [deliveryDates, setDeliveryDates] = useState<string[]>([]);
+  const [receiverName, setReceiverName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [specialInstructions, setSpecialInstructions] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!startDate) {
@@ -41,6 +46,46 @@ export default function FloralSubscriptionPage() {
     const dd = String(end.getDate()).padStart(2, '0');
     setEndDate(`${yyyy}-${mm}-${dd}`);
   }, [startDate, subscriptionType]);
+
+  const handleConfirm = async () => {
+    if (!subscriptionType || !colorTheme || !startDate || !endDate || deliveryDates.length === 0 || !receiverName || !phone || !address) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('userToken');
+      const res = await fetch('http://localhost:3001/api/subscriptions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          subscriptionType,
+          colorTheme,
+          startDate,
+          endDate,
+          deliveryDates,
+          receiverName,
+          phone,
+          address,
+          specialInstructions
+        })
+      });
+      if (res.ok) {
+        alert('Subscription created successfully!');
+        // Optionally redirect or reset form
+      } else {
+        const data = await res.json();
+        alert(data.message || 'Failed to create subscription');
+      }
+    } catch (err) {
+      alert('Failed to create subscription');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f8f5f3] to-[#e6e2e0]">
@@ -176,17 +221,23 @@ export default function FloralSubscriptionPage() {
                   <input 
                     type="text"
                     placeholder="Receiver's Name"
+                    value={receiverName}
+                    onChange={e => setReceiverName(e.target.value)}
                     className="w-full p-4 rounded-2xl bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none placeholder-gray-500 transition-all duration-300"
                   />
                   <input 
                     type="tel"
                     placeholder="Phone Number"
+                    value={phone}
+                    onChange={e => setPhone(e.target.value)}
                     className="w-full p-4 rounded-2xl bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none placeholder-gray-500 transition-all duration-300"
                   />
                 </div>
                 <textarea 
                   placeholder="Delivery Address"
                   rows={3}
+                  value={address}
+                  onChange={e => setAddress(e.target.value)}
                   className="w-full p-4 rounded-2xl bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none placeholder-gray-500 transition-all duration-300 resize-none"
                 />
               </div>
@@ -197,6 +248,8 @@ export default function FloralSubscriptionPage() {
                 <textarea 
                   placeholder="Any special requests or delivery instructions..."
                   rows={3}
+                  value={specialInstructions}
+                  onChange={e => setSpecialInstructions(e.target.value)}
                   className="w-full p-4 rounded-2xl bg-white text-gray-800 border-2 border-[#8B7355]/40 focus:border-[#8B7355] focus:ring-1 focus:ring-[#8B7355] outline-none placeholder-gray-500 transition-all duration-300 resize-none"
                 />
               </div>
@@ -238,8 +291,12 @@ export default function FloralSubscriptionPage() {
                 </div>
               </div>
 
-              <button className="w-full bg-[#8B7355] text-white py-5 rounded-2xl hover:bg-[#6F5B3E] transition-all duration-300 transform hover:scale-105 font-semibold text-xl">
-                Confirm Subscription
+              <button 
+                onClick={handleConfirm}
+                disabled={loading || !subscriptionType || !colorTheme || !startDate || !endDate || deliveryDates.length === 0 || !receiverName || !phone || !address}
+                className="w-full bg-[#8B7355] text-white py-5 rounded-2xl hover:bg-[#6F5B3E] transition-all duration-300 transform hover:scale-105 font-semibold text-xl"
+              >
+                {loading ? 'Processing...' : 'Confirm Subscription'}
               </button>
             </div>
           </div>

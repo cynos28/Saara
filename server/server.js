@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const orderRoutes = require('./routes/orderRoute');
+const subscriptionRoutes = require('./routes/subcriptionRoute');
 require('dotenv').config();
 
 const app = express();
@@ -26,6 +27,7 @@ mongoose.connect(process.env.MONGO_URI, {
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/subscriptions', subscriptionRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
